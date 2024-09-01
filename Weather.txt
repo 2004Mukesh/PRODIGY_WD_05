@@ -1,122 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
 
-.container {
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-input[type="text"] {
-    padding: 10px;
-    width: 200px;
-    border: none;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: #fff;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-.weather-result {
-    margin-top: 20px;
-    font-size: 1.2em;
-}
-
+<head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Weather app</title>
+    <link rel="shortcut icon" href="img/bg.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
-        <h1>Weather App</h1>
-        <input type="text" id="locationInput" placeholder="Enter a location">
-        <button onclick="getWeatherByLocation()">Get Weather</button>
-        <button onclick="getWeatherByUserLocation()">Get Weather by Current Location</button>
 
-        <div id="weatherResult" class="weather-result">
-            <!-- Weather information will be displayed here -->
+<body>
+
+
+    <div class="app-main" id="parent">
+        <div class="header">
+            <h4>Get Weather</h4>
         </div>
+        <div class="searchInputBox">
+            <input type="text" name="" id="input-box" class="input-box" placeholder="enter city name">
+        </div>
+        <div class="weather-body" id="weather-body">
+            <!-- weather-body will be append through JavaScript -->
+        </div>
+            
     </div>
+   
 
     <script src="script.js"></script>
+    <!-- font awesome icon cdn  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- sweetalert cdn........ -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 </body>
+
 </html>
-const apiKey = 'YOUR_API_KEY';
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Ubuntu:wght@300&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  background-image: url("img/bg1.jpg");
+  min-height: 92vh;
+  overflow: auto;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+}
 
-function getWeatherByLocation() {
-    const location = document.getElementById('locationInput').value;
-    if (location) {
-        fetchWeatherData(location);
-    } else {
-        alert("Please enter a location.");
+.header h4 {
+  color: #da1e4e;
+  font-weight: 700;
+  font-size: 2.4rem;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+.app-main {
+  min-height: 10vh;
+  width: 30vw;
+  margin: 50px auto;
+  padding: 20px;
+  text-align: center;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border-radius: 15px;
+  background: #c0dfec; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #92fe9d,
+    #c0dfec
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #92fe9d,
+    #c0dfec
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.app-main > * {
+  margin-bottom: 20px;
+}
+.input-box {
+  width: 100%;
+  background: azure;
+  color: #e4603a;
+  font-weight: 500;
+  border: none;
+  font-size: 1.7rem;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  outline: none;
+  border: none;
+}
+
+.weather-body {
+  color: #fff;
+  padding: 20px;
+  line-height: 2rem;
+  border-radius: 10px;
+  background-color: #eff1f3;
+  display: none;
+  background: linear-gradient(
+    to top,
+    #da1e4e,
+    #e4603a
+  );
+}
+.location-deatils {
+  font-weight: bold;
+}
+.weather-status {
+  padding: 20px;
+}
+.temp {
+  font-size: 5rem;
+  font-weight: 700;
+  margin-bottom: 20px 0px;
+  text-shadow: 2px 4px rgba(0, 0, 0, 0.1);
+}
+.weather {
+  margin-top: 25px;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+.min-max {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-top: 15px;
+}
+
+.day_details {
+  padding: 20px;
+}
+.sun-detail,
+.basic {
+  font-size: 1rem;
+}
+#weather-icon {
+  color: black;
+}
+
+
+@media screen and (max-width: 800px) {
+  .app-main {
+    width: 95%;
+    padding: 10px;
+  }
+  body {
+    min-height: 94vh;
+  }
+}
+
+//making object of weatherapi
+const weatherApi = {
+    key: '4eb3703790b356562054106543b748b2',
+    baseUrl: 'https://api.openweathermap.org/data/2.5/weather'
+}
+
+//anonymous function
+//adding event listener key press of enter
+let searchInputBox = document.getElementById('input-box');
+searchInputBox.addEventListener('keypress', (event) => {
+    if (event.keyCode == 13) {
+        // console.log(searchInputBox.value);
+        getWeatherReport(searchInputBox.value);
+        
+    }
+})
+
+
+//get waether report
+
+function getWeatherReport(city) {
+    fetch(`${weatherApi.baseUrl}?q=${city}&appid=${weatherApi.key}&units=metric`)  // fetch method fetching the data from  base url ...metric is used for unit in celcius......here i am appending the base url to get data by city name .  
+        .then(weather => {   //weather is from api
+            return weather.json(); // return data from api in JSON
+        }).then(showWeaterReport);  // calling showweatherreport function
+
+}
+
+//show weather report
+
+function showWeaterReport(weather) {
+    let city_code=weather.cod;
+    if(city_code==='400'){ 
+        swal("Empty Input", "Please enter any city", "error");
+        reset();
+    }else if(city_code==='404'){
+        swal("Bad Input", "entered city didn't matched", "warning");
+        reset();
+    }
+    else{
+
+    // console.log(weather.cod);
+    // console.log(weather);  
+    let op = document.getElementById('weather-body');
+    op.style.display = 'block';
+    let todayDate = new Date();
+    let parent=document.getElementById('parent');
+    let weather_body = document.getElementById('weather-body');
+    weather_body.innerHTML =
+        `
+    <div class="location-deatils">
+        <div class="city" id="city">${weather.name}, ${weather.sys.country}</div>
+        <div class="date" id="date"> ${dateManage(todayDate)}</div>
+    </div>
+    <div class="weather-status">
+        <div class="temp" id="temp">${Math.round(weather.main.temp)}&deg;C </div>
+        <div class="weather" id="weather"> ${weather.weather[0].main} <i class="${getIconClass(weather.weather[0].main)}"></i>  </div>
+        <div class="min-max" id="min-max">${Math.floor(weather.main.temp_min)}&deg;C (min) / ${Math.ceil(weather.main.temp_max)}&deg;C (max) </div>
+        <div id="updated_on">Updated as of ${getTime(todayDate)}</div>
+    </div>
+    <hr>
+    <div class="day-details">
+        <div class="basic">Feels like ${weather.main.feels_like}&deg;C | Humidity ${weather.main.humidity}%  <br> Pressure ${weather.main.pressure} mb | Wind ${weather.wind.speed} KMPH</div>
+    </div>
+    `;
+    parent.append(weather_body);
+    changeBg(weather.weather[0].main);
+    reset();
     }
 }
 
-function getWeatherByUserLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            fetchWeatherDataByCoords(lat, lon);
-        }, error => {
-            alert("Unable to retrieve your location. Please enter it manually.");
-        });
-    } else {
-        alert("Geolocation is not supported by this browser.");
+
+
+//making a function for the  last update current time 
+
+function getTime(todayDate) {
+    let hour =addZero(todayDate.getHours());
+    let minute =addZero(todayDate.getMinutes());
+    return `${hour}:${minute}`;
+}
+
+//date manage for return  current date
+function dateManage(dateArg) {
+    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    let year = dateArg.getFullYear();
+    let month = months[dateArg.getMonth()];
+    let date = dateArg.getDate();
+    let day = days[dateArg.getDay()];
+    // console.log(year+" "+date+" "+day+" "+month);
+    return `${date} ${month} (${day}) , ${year}`
+}
+
+// function for the dynamic background change  according to weather status
+function changeBg(status) {
+    if (status === 'Clouds') {
+        document.body.style.backgroundImage = 'url(img/clouds.jpg)';
+    } else if (status === 'Rain') {
+        document.body.style.backgroundImage = 'url(img/rainy.jpg)';
+    } else if (status === 'Clear') {
+        document.body.style.backgroundImage = 'url(img/clear.jpg)';
+    }
+    else if (status === 'Snow') {
+        document.body.style.backgroundImage = 'url(img/snow.jpg)';
+    }
+    else if (status === 'Sunny') {
+        document.body.style.backgroundImage = 'url(img/sunny.jpg)';
+    } else if (status === 'Thunderstorm') {
+        document.body.style.backgroundImage = 'url(img/thunderstrom.jpg)';
+    } else if (status === 'Drizzle') {
+        document.body.style.backgroundImage = 'url(img/drizzle.jpg)';
+    } else if (status === 'Mist' || status === 'Haze' || status === 'Fog') {
+        document.body.style.backgroundImage = 'url(img/mist.jpg)';
+    }
+
+    else {
+        document.body.style.backgroundImage = 'url(img/bg.jpg)';
     }
 }
 
-function fetchWeatherData(location) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`)
-        .then(response => response.json())
-        .then(data => displayWeatherData(data))
-        .catch(error => console.error("Error fetching weather data:", error));
-}
-
-function fetchWeatherDataByCoords(lat, lon) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
-        .then(response => response.json())
-        .then(data => displayWeatherData(data))
-        .catch(error => console.error("Error fetching weather data:", error));
-}
-
-function displayWeatherData(data) {
-    if (data.cod === 200) {
-        const weatherResult = document.getElementById('weatherResult');
-        weatherResult.innerHTML = `
-            <h2>${data.name}, ${data.sys.country}</h2>
-            <p><strong>Temperature:</strong> ${data.main.temp} °C</p>
-            <p><strong>Weather:</strong> ${data.weather[0].description}</p>
-            <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
-            <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
-        `;
+//making a function for the classname of icon
+function getIconClass(classarg) {
+    if (classarg === 'Rain') {
+        return 'fas fa-cloud-showers-heavy';
+    } else if (classarg === 'Clouds') {
+        return 'fas fa-cloud';
+    } else if (classarg === 'Clear') {
+        return 'fas fa-cloud-sun';
+    } else if (classarg === 'Snow') {
+        return 'fas fa-snowman';
+    } else if (classarg === 'Sunny') {
+        return 'fas fa-sun';
+    } else if (classarg === 'Mist') {
+        return 'fas fa-smog';
+    } else if (classarg === 'Thunderstorm' || classarg === 'Drizzle') {
+        return 'fas fa-thunderstorm';
     } else {
-        alert("Location not found. Please try again.");
+        return 'fas fa-cloud-sun';
     }
 }
 
+function reset() {
+    let input = document.getElementById('input-box');
+    input.value = "";
+}
+
+// funtion to add zero if hour and minute less than 10
+function addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
